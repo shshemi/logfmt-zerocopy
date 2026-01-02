@@ -2,5 +2,13 @@
 name = "logfmt-zerocopy"
 version = "0.1.0"
 edition = "2024"
+authors = ["shshemi <shshemi@gmail.com>"]
+keywords = ["logfmt","zerocopy", "parsing"]
+homepage = "https://github.com/shshemi/logfmt-zerocopy"
+documentation = "https://docs.rs/logfmt-zerocopy/latest/logfmt-zerocopy/"
+repository = "https://github.com/shshemi/logfmt-zerocopy"
+readme = "README.md"
+description = "A lightweight parser for Logfmt"
+license-file = "LICENSE"
 
 [dependencies]
