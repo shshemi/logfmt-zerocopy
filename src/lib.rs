@@ -1,6 +1,19 @@
 use std::str::CharIndices;
 
 pub trait Logfmt<'a> {
+    /// Returns an iterator that yields logfmt key-value pairs.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use logfmt_zerocopy::Logfmt;
+    ///
+    /// let line = r#"level=info msg="hello world" count=42"#;
+    ///
+    /// for (key, value) in line.logfmt() {
+    ///     println!("{key}: {value}");
+    /// }
+    /// ```
     fn logfmt(&'a self) -> Iter<'a>;
 }
 
@@ -14,6 +27,22 @@ impl<'a> Logfmt<'a> for str {
     }
 }
 
+/// Iterates over logfmt key-value pairs in a string.
+///
+/// Created by calling [`logfmt()`](Logfmt::logfmt) on a string slice.
+///
+/// # Example
+///
+/// ```
+/// use logfmt_zerocopy::Logfmt;
+///
+/// let line = r#"level=info msg="hello world""#;
+/// let mut iter = line.logfmt();
+///
+/// assert_eq!(iter.next(), Some(("level", "info")));
+/// assert_eq!(iter.next(), Some(("msg", "hello world")));
+/// assert_eq!(iter.next(), None);
+/// ```
 pub struct Iter<'a> {
     text: &'a str,
     chars_indices: CharIndices<'a>,
