@@ -89,28 +89,16 @@ impl State {
     }
 }
 
-/// Collects all (key, value) pairs from a logfmt line using the zero-copy iterator.
-///
-/// This does **not** allocate per-field strings; it just collects the borrowed slices.
-pub fn collect_pairs<'a>(input: &'a str) -> Vec<(&'a str, &'a str)> {
-    input.logfmt().collect()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    pub fn collect_pairs(input: &str) -> Vec<(&str, &str)> {
+        input.logfmt().collect()
+    }
+
     #[test]
     fn logfmt_collect_pairs_all_cases() {
-        // Table-driven: one test, many cases.
-        //
-        // NOTE:
-        // The expected outputs below assume the usual logfmt rules:
-        // - fields are space-separated
-        // - field is `key=value` OR `key="value with spaces"`
-        // - `key=` yields empty value
-        // If your parser intentionally differs (e.g., treats bare `key` specially),
-        // tweak the expectations accordingly.
         let cases: &[(&str, &[(&str, &str)])] = &[
             // Empty / whitespace-only
             ("", &[]),
