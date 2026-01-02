@@ -36,7 +36,8 @@ impl<'a> Iterator for Iter<'a> {
         match self.state {
             State::KeyEnd(ks, ke) => {
                 self.state = State::Init;
-                Some((&self.text[ks..ke], Default::default()))
+                let vs = ke + '='.len_utf8();
+                Some((&self.text[ks..ke], &self.text[vs..]))
             }
             State::ValueStart(ks, ke, vs) => {
                 self.state = State::Init;
