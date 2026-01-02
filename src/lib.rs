@@ -26,7 +26,6 @@ impl<'a> Iterator for Iter<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         for (idx, input) in &mut self.chars_indices {
             let next = self.state.next(idx, input);
-            println!("{idx:>2},{input} -> {:?}", next);
             if let State::ValueEnd(ks, ke, vs, ve) = next {
                 self.state = State::Init;
                 return Some((&self.text[ks..ke], &self.text[vs..ve]));
