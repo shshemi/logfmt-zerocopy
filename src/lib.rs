@@ -85,6 +85,7 @@ enum State {
     KeyEnd(usize, usize),
     ValueStart(usize, usize, usize),
     ValueStartWithQuote(usize, usize, usize),
+    ValueEscaped(usize, usize, usize),
     ValueEnd(usize, usize, usize, usize),
 }
 
@@ -110,9 +111,11 @@ impl State {
                 _ => State::ValueStart(ks, ke, vs),
             },
             State::ValueStartWithQuote(ks, ke, vs) => match c {
+                '\\' => State::ValueEscaped(ks, ke, vs),
                 '"' => State::ValueEnd(ks, ke, vs, i),
                 _ => State::ValueStartWithQuote(ks, ke, vs),
             },
+            State::ValueEscaped(ks, ke, vs) => State::ValueStartWithQuote(ks, ke, vs),
             State::ValueEnd(_, _, _, _) => State::Init,
         }
     }
@@ -158,6 +161,14 @@ mod tests {
             ),
             // Quotes but empty
             (r#"msg="""#, &[("msg", "")]),
+            // Escaped quotes inside quoted values
+            (r#"msg="hello \"world\"""#, &[("msg", r#"hello \"world\""#)]),
+            (
+                r#"msg="say \"hi\" ok""#,
+                &[("msg", r#"say \"hi\" ok"#)],
+            ),
+            (r#"msg="escaped \\ backslash""#, &[("msg", r#"escaped \\ backslash"#)]),
+            (r#"a="\"" b=2"#, &[("a", r#"\""#), ("b", "2")]),
             // Values with punctuation / URL-like content
             ("path=/var/log/syslog", &[("path", "/var/log/syslog")]),
             (
