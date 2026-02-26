@@ -163,11 +163,11 @@ mod tests {
             (r#"msg="""#, &[("msg", "")]),
             // Escaped quotes inside quoted values
             (r#"msg="hello \"world\"""#, &[("msg", r#"hello \"world\""#)]),
+            (r#"msg="say \"hi\" ok""#, &[("msg", r#"say \"hi\" ok"#)]),
             (
-                r#"msg="say \"hi\" ok""#,
-                &[("msg", r#"say \"hi\" ok"#)],
+                r#"msg="escaped \\ backslash""#,
+                &[("msg", r#"escaped \\ backslash"#)],
             ),
-            (r#"msg="escaped \\ backslash""#, &[("msg", r#"escaped \\ backslash"#)]),
             (r#"a="\"" b=2"#, &[("a", r#"\""#), ("b", "2")]),
             // Values with punctuation / URL-like content
             ("path=/var/log/syslog", &[("path", "/var/log/syslog")]),
